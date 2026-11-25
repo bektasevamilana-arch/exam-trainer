@@ -1,0 +1,29 @@
+{% extends "trainer/base.html" %}
+
+{% block title %}Результат — тренажёр по ОС{% endblock %}
+
+{% block content %}
+  <h1>Результат</h1>
+  <p class="lead">Тема: {{ topic.name }}</p>
+  <p class="score">{{ score }} из {{ total }}</p>
+
+  <div class="results">
+    {% for item in results %}
+      <article class="result {% if item.is_correct %}correct{% else %}wrong{% endif %}">
+        <p><strong>{{ forloop.counter }}. {{ item.question_text }}</strong></p>
+        <p>Ваш ответ: {{ item.selected_text }}</p>
+        {% if item.is_correct %}
+          <p style="color: var(--ok);">Верно</p>
+        {% else %}
+          <p class="error">Правильный ответ: {{ item.correct_text }}</p>
+          <p class="explanation">Пояснение: {{ item.explanation }}</p>
+        {% endif %}
+      </article>
+    {% endfor %}
+  </div>
+
+  <div class="actions">
+    <a class="button" href="{% url 'quiz' topic.slug %}">Пройти заново</a>
+    <a href="{% url 'home' %}">Вернуться к списку тем</a>
+  </div>
+{% endblock %}

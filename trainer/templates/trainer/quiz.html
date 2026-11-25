@@ -1,0 +1,38 @@
+{% extends "trainer/base.html" %}
+
+{% block title %}{{ topic.name }} — тренажёр по ОС{% endblock %}
+
+{% block content %}
+  <h1>{{ topic.name }}</h1>
+  <p class="lead">Выберите по одному варианту для каждого вопроса.</p>
+
+  {% if not questions %}
+    <p>В этой теме пока нет вопросов.</p>
+  {% else %}
+    <form method="post">
+      {% csrf_token %}
+      {% for error in form.non_field_errors %}
+        <p class="error">{{ error }}</p>
+      {% endfor %}
+
+      {% for field in form %}
+        <fieldset class="question{% if field.errors %} has-error{% endif %}">
+          <legend><span class="qnum">{{ forloop.counter }}.</span> {{ field.label }}</legend>
+          <div class="answers">
+            {% for widget in field %}
+              <label class="answer">
+                {{ widget.tag }}
+                <span>{{ widget.choice_label }}</span>
+              </label>
+            {% endfor %}
+          </div>
+          {% for error in field.errors %}
+            <p class="error">{{ error }}</p>
+          {% endfor %}
+        </fieldset>
+      {% endfor %}
+
+      <button type="submit">Проверить ответы</button>
+    </form>
+  {% endif %}
+{% endblock %}

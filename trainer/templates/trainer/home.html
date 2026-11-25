@@ -1,0 +1,22 @@
+{% extends "trainer/base.html" %}
+
+{% block title %}Темы — тренажёр по ОС{% endblock %}
+
+{% block content %}
+  <h1>Подготовка к экзамену по операционным системам</h1>
+  <p class="lead">Выберите тему. В каждой теме три вопроса с одним правильным ответом.</p>
+
+  <div class="topics">
+    {% for topic in topics %}
+      <article class="card">
+        <h2><a href="{% url 'quiz' topic.slug %}">{{ topic.name }}</a></h2>
+        <p>{{ topic.description }}</p>
+        <a class="button" href="{% url 'quiz' topic.slug %}">Начать тест</a>
+      </article>
+    {% empty %}
+      <p>Темы пока не загружены. Выполните <code>python manage.py load_questions</code>.</p>
+    {% endfor %}
+  </div>
+
+  <p class="hint">Список тем получен из: {% if topics_source == "cache" %}Valkey{% else %}PostgreSQL{% endif %}.</p>
+{% endblock %}
